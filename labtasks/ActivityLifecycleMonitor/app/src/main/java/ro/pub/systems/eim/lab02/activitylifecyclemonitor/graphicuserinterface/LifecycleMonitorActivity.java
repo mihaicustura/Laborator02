@@ -7,12 +7,15 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.PopupWindow;
 
 import ro.pub.systems.eim.lab02.activitylifecyclemonitor.R;
 import ro.pub.systems.eim.lab02.activitylifecyclemonitor.general.Constants;
 import ro.pub.systems.eim.lab02.activitylifecyclemonitor.general.Utilities;
+
+import static android.os.Bundle.*;
 
 public class LifecycleMonitorActivity extends AppCompatActivity {
 
@@ -48,8 +51,32 @@ public class LifecycleMonitorActivity extends AppCompatActivity {
                 usernameEditText.setText(getResources().getText(R.string.empty));
                 passwordEditText.setText(getResources().getText(R.string.empty));
             }
+
+            /*if (((Button)view).getText().toString().equals("Home")) {
+                Log.d(Constants.TAG, "some tag");
+            }*/
         }
 
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        EditText usernameEditText = (EditText)findViewById(R.id.username_edit_text);
+        CheckBox checkBox = (CheckBox) findViewById(R.id.remember_me_checkbox);
+        if (checkBox.isChecked()) {
+            savedInstanceState.putString(Constants.USERNAME_EDIT_TEXT, usernameEditText.getText().toString());
+        }
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+        EditText usernameEditText = (EditText)findViewById(R.id.username_edit_text);
+        if ((savedInstanceState != null) && (savedInstanceState.getString(Constants.USERNAME_EDIT_TEXT) != null)) {
+            usernameEditText.setText(savedInstanceState.getString(Constants.USERNAME_EDIT_TEXT));
+            Log.d(Constants.TAG, usernameEditText.getText().toString());
+        }
     }
 
     @Override
@@ -62,7 +89,42 @@ public class LifecycleMonitorActivity extends AppCompatActivity {
         Button cancelButton = (Button) findViewById(R.id.cancel_button);
         cancelButton.setOnClickListener(buttonClickListener);
 
-        Log.d(Constants.TAG, "onCreate() method was invoked without a previous state");
+        Log.d(Constants.TAG, savedInstanceState == null ? "onCreate() method was invoked without a previous state" : "onCreate() method was invoked with a previous state");
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(Constants.TAG, "onRestart() method was invoked");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(Constants.TAG, "onStart() method was invoked");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(Constants.TAG, "onResume() method was invoked");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(Constants.TAG, "onPause() method was invoked");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(Constants.TAG, "onStop() method was invoked");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(Constants.TAG, "onDestroy() method was invoked");
+    }
 }
